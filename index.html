@@ -414,7 +414,7 @@
         .sticky-wrapper {
             position: sticky;
             top: 0;
-            z-index: 1000; /* Ensures it floats above maps and charts */
+            z-index: 1010; /* Ensures it floats above maps and charts */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Optional: Adds a nice shadow when scrolling */
         }
     </style>
@@ -906,7 +906,8 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 const map = L.map(config.id, {
                     center: [32.0809, -81.0912],
                     zoom: 13, // Zoomed out slightly to see the city
-                    zoomControl: true
+                    zoomControl: true,
+                    background: true
                 });
 
                 // Add Base Layer
