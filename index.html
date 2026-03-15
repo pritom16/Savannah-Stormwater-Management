@@ -845,7 +845,7 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
             Object.values(mapInstances).forEach(map => {
                 map.invalidateSize(); 
                 });
-            }, 200); // Small delay to allow the tab transition to finish
+            }, 300); // Small delay to allow the tab transition to finish
         }
 
         Chart.defaults.color = '#2b2520';
@@ -940,7 +940,7 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 }).addTo(map);
 
                 // FORCE RESIZE
-                setTimeout(() => { map.invalidateSize(); }, 200);
+                setTimeout(() => { map.invalidateSize(); }, 300);
 
                 // Add GeoJSON if we have it
                 if (geoJsonData) {
