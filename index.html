@@ -378,26 +378,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
+        font-size: 1.75rem;
         font-weight: 500;
         background: white;
         }
         
         .matrix-hdr { 
-            background: #faf4f6;
-            color: #4b5563;
+            background: #ffffff;
+            color: #000000;
             font-weight: 700;
         }
 
         /* Color Coding for Risk Levels */
-        .risk-low { background-color: #d1fae5; color: #065f46; }      /* Green */
-        .risk-med { background-color: #fef3c7; color: #92400e; }      /* Yellow/Orange */
-        .risk-high { background-color: #fee2e2; color: #991b1b; }     /* Red */
-        .risk-extreme { background-color: #7f1d1d; color: white; }    /* Dark Red */
+        .risk-low { background-color: #00fff7; color: #000000; }      
+        .risk-med { background-color: #0ee003; color: #000000; }      
+        .risk-high { background-color: #e9f90e; color: #000000; }
+        .risk-vhigh { background-color: #798302; color: #000000; }     
+        .risk-extreme { background-color: #de0505; color: #000000; }    
         
         .matrix-val { 
-            background: #fff;
-            color: #c68642;
+            background: #ffffff;
+            color: #000000;
             font-family: 'Courier Prime', monospace;
         }
 
@@ -638,10 +639,10 @@
                             <div class="matrix-cell matrix-hdr">Total</div>
                             
                             <div class="matrix-cell matrix-hdr">5</div>
-                            <div class="matrix-cell risk-low">7.97</div>
+                            <div class="matrix-cell risk-low">27.97</div>
                             <div class="matrix-cell risk-med">2.37</div>
                             <div class="matrix-cell risk-high">0.95</div>
-                            <div class="matrix-cell risk-high">0.64</div>
+                            <div class="matrix-cell risk-vhigh">0.64</div>
                             <div class="matrix-cell risk-extreme">1.07</div>
                             <div class="matrix-cell matrix-hdr">33.00</div>
                             
@@ -649,8 +650,8 @@
                             <div class="matrix-cell risk-low">40.97</div>
                             <div class="matrix-cell risk-med">3.55</div>
                             <div class="matrix-cell risk-high">0.67</div>
-                            <div class="matrix-cell risk-high">0.56</div>
-                            <div class="matrix-cell risk-high">0.62</div>
+                            <div class="matrix-cell risk-vhigh">0.56</div>
+                            <div class="matrix-cell risk-vhigh">0.62</div>
                             <div class="matrix-cell matrix-val">46.37</div>
                             
                             <div class="matrix-cell matrix-hdr">3</div>
@@ -1847,6 +1848,7 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 [2043, '$0.1M', 50.4, 2.35, 4.80, 0.05, 2, 80.8, 4.00, 2.29, 9.15],
                 [2044, '$1.7M', 51.4, 2.38, 4.80, 0.28, 6, 78.0, 3.76, 3.35, 12.19]
             ];
+            
 
             // TODO: Add table data for "Maintain Current State" scenario
             // When you have different data for the "Maintain Current State" option,
