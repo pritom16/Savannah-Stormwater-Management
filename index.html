@@ -827,11 +827,14 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
 </script>
 
 
-    <script>
+     <script>
 
         // 1. GLOBAL VARIABLES
         const mapInstances = {}; // Store maps to fix the "hidden tab" bug
+        const layerInstances = {}; // Track layers to allow filtering/removal
+        let activeLofFilter = null;
         let geoJsonData = null;  // Store data to load it only once
+        const chartInstances = {}; // Store chart instances for interaction
 
         function nav(id) {
         // 1. Standard Tab Switching (Your existing code)
@@ -879,127 +882,345 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
             }
         };
 
-        // 3. MAP INITIALIZATION LOGIC
-    function initializeMaps() {
+        // --- GLOBAL FILTER ENGINE ---
+        function filterByLoF(lofValue) {
+            activeLofFilter = lofValue;
 
-        // We use the variable 'stormwaterData' that we loaded from the .js file
-        if (typeof stormwaterData === 'undefined') {
-            console.error("Data file not loaded! Check if stormwater_data.js is linked correctly.");
-            return;
+            // Update filter indicator banner
+            const banner = document.getElementById('lof-filter-banner');
+            if (banner) {
+                banner.style.display = 'flex';
+                banner.querySelector('#lof-filter-label').textContent = `Filtered: LoF = ${lofValue}`;
+            }
+
+            // Highlight selected bar in c5
+            if (chartInstances['c5']) {
+                const labels = chartInstances['c5'].data.labels;
+                const originalColors = ['#1D1A39', '#AE445A', '#F39F5A', '#662549', '#451952'];
+                chartInstances['c5'].data.datasets[0].backgroundColor = labels.map((l, i) =>
+                    l == lofValue ? originalColors[i] : originalColors[i] + '44'
+                );
+                chartInstances['c5'].data.datasets[0].borderWidth = labels.map(l => l == lofValue ? 2 : 0);
+                chartInstances['c5'].data.datasets[0].borderColor = labels.map(l => l == lofValue ? '#fff' : 'transparent');
+                chartInstances['c5'].update();
+            }
+
+            // Highlight selected bar group in c6b
+            if (chartInstances['c6b']) {
+                const labels = chartInstances['c6b'].data.labels;
+                const minColors = ['#08979D', '#055B5C'];
+                chartInstances['c6b'].data.datasets.forEach((ds, di) => {
+                    ds.backgroundColor = labels.map(l =>
+                        l == lofValue ? (di === 0 ? '#08979D' : '#055B5C') : (di === 0 ? '#08979D44' : '#055B5C44')
+                    );
+                });
+                chartInstances['c6b'].update();
+            }
+
+            applyGlobalFilter('LoF', lofValue);
         }
 
-        const mapConfigs = [
-            { id: 'map-lof' },
-            { id: 'map-cof' },
-            { id: 'map-risk' },
-            { id: 'map-projects' }
-        ];
+        function applyGlobalFilter(filterType, value) {
+            console.log(`Filtering by ${filterType}: ${value}`);
 
-        mapConfigs.forEach(config => {
-            const mapElement = document.getElementById(config.id);
-            if (mapElement && !mapInstances[config.id]) { // Only init if not already done
-                
-                // CSS FIX: Remove the 'flex' layout so map can expand
-                mapElement.classList.add('active'); 
-                mapElement.innerHTML = ''; // Remove the water icon
+            // 1. FILTER THE MAP
+            // We target all maps, but primarily the active one in view
+            Object.keys(mapInstances).forEach(mapId => {
+                const map = mapInstances[mapId];
+                if (layerInstances[mapId]) map.removeLayer(layerInstances[mapId]);
 
-                // Create Map
-                const map = L.map(config.id, {
-                    center: [32.0809, -81.0912],
-                    zoom: 13, // Zoomed out slightly to see the city
-                    zoomControl: true,
-                    background: true
+                const filteredFeatures = stormwaterData.features.filter(f => {
+                    if (filterType === 'LoF') return f.properties.LoF == value;
+                    if (filterType === 'CoF') return f.properties.CoF == value;
+                    if (filterType === 'Risk') return f.properties.Risk_Score == value;
+                    return true;
                 });
 
-                // Add Base Layer
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; OpenStreetMap &copy; CARTO'
-                }).addTo(map);
-
-                // DIRECTLY USE THE VARIABLE FROM STEP 1
-                L.geoJSON(stormwaterData, {
-                    style: function(feature) {
-                        let color = '#3b82f6'; // Default Blue
-                        if (feature.properties && feature.properties.source_file) {
-                            const src = feature.properties.source_file.toLowerCase();
-                            if (src.includes('pump')) color = '#ef4444'; 
-                            if (src.includes('conduit')) color = '#22c55e';
-                        }
-                        return { color: color, weight: 2, opacity: 0.8 };
-                    },
-                    onEachFeature: function(feature, layer) {
-                        if (feature.properties) {
-                            let popup = '<div style="font-size:11px">';
-                            for (let key in feature.properties) {
-                                popup += `<b>${key}:</b> ${feature.properties[key]}<br>`;
-                            }
-                            popup += '</div>';
-                            layer.bindPopup(popup);
-                        }
+                layerInstances[mapId] = L.geoJSON({type: "FeatureCollection", features: filteredFeatures}, {
+                    style: { color: '#ef4444', weight: 4, opacity: 1 },
+                    onEachFeature: (f, l) => {
+                        let popup = '<div style="font-size:11px"><b>FILTERED ASSET</b><br>';
+                        popup += `ID: ${f.properties.Asset_ID}<br>LoF: ${f.properties.LoF} | CoF: ${f.properties.CoF}</div>`;
+                        l.bindPopup(popup);
                     }
                 }).addTo(map);
-
-                // FORCE RESIZE
-                setTimeout(() => { map.invalidateSize(); }, 300);
-
-                // Add GeoJSON if we have it
-                if (geoJsonData) {
-                    addGeoJsonToMap(map, geoJsonData);
-                }
-
-                // Save instance globally
-                mapInstances[config.id] = map;
-            }
-        });
-    }
-
-    // 4. LOAD GEOJSON DATA
-    function loadGeoJsonData() {
-        fetch('merged_stormwater_map.geojson')
-            .then(response => {
-                if (!response.ok) throw new Error("File not found");
-                return response.json();
-            })
-            .then(data => {
-                geoJsonData = data;
-                console.log("Data loaded. Features:", data.features.length);
-                // Initialize maps now that we have data
-                initializeMaps();
-            })
-            .catch(err => {
-                console.error("Error loading GeoJSON:", err);
-                // Initialize empty maps even if data fails
-                initializeMaps();
             });
-    }
 
-    // Helper to style and add the layer
-    function addGeoJsonToMap(map, data) {
-        L.geoJSON(data, {
-            style: function(feature) {
-                // Color logic based on source_file property
-                let color = '#3b82f6'; // Default Blue
-                if (feature.properties && feature.properties.source_file) {
-                    const src = feature.properties.source_file.toLowerCase();
-                    if (src.includes('pump')) color = '#ef4444'; // Red
-                    if (src.includes('conduit')) color = '#22c55e'; // Green
-                }
-                return { color: color, weight: 2, opacity: 0.8 };
-            },
-            onEachFeature: function(feature, layer) {
-                // Simple popup
-                if (feature.properties) {
-                    let popup = '<div style="font-size:11px">';
-                    for (let key in feature.properties) {
-                        popup += `<b>${key}:</b> ${feature.properties[key]}<br>`;
-                    }
-                    popup += '</div>';
-                    layer.bindPopup(popup);
-                }
+            // 2. FILTER TABLE T1 (Asset Details / LoF Section)
+            const t1 = document.getElementById('t1');
+            if (typeof lofAssetData !== 'undefined') {
+                t1.innerHTML = lofAssetData.filter(r => {
+                    if (filterType === 'LoF') return r[5] == value;
+                    if (filterType === 'CoF') return r[4] == value; // Assuming CoF is col 5
+                    return true;
+                }).map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td><span class="risk-badge risk-${r[5]}">${r[5]}</span></td><td>${r[6]}</td><td>${r[7]}</td><td>${r[8]}</td><td>${r[9]}</td><td>${r[10]}</td></tr>`).join('');
             }
-        }).addTo(map);
-    }
+
+            // 3. FILTER TABLE T3 (High Risk Assets)
+            const t3 = document.getElementById('t3');
+            if (typeof RiskAssetData !== 'undefined') {
+                t3.innerHTML = RiskAssetData.filter(r => {
+                    if (filterType === 'Risk') return r[8] == value; // Risk score column
+                    return true;
+                }).map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td><span class="risk-badge risk-${r[8]}">${r[8]}</span></td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td></tr>`).join('');
+            }
+
+            // 4. FILTER TABLE T4 (Project Assets)
+            const t4 = document.getElementById('t4');
+            if (typeof ProjectsAssetDetails !== 'undefined') {
+                t4.innerHTML = ProjectsAssetDetails.filter(r => {
+                    if (filterType === 'LoF') return r[6] == value;
+                    if (filterType === 'Risk') return r[8] == value;
+                    return true;
+                }).map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td><span class="risk-badge risk-${r[6]}">${r[6]}</span></td><td>${r[7]}</td><td><span class="risk-badge risk-${r[8]}">${r[8]}</span></td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td></tr>`).join('');
+            }
+        }
+
+        // --- COF FILTER ENGINE ---
+        // categoryColMap maps CoF by Category label → CofAssetData column index
+        const categoryColMap = { 'Customer': 11, 'Diameter': 8, 'Rail': 10, 'Road': 9, 'Water': null };
+        // cofColors for c7 (CoF Miles bars 1-5)
+        const c7OrigColors = ['#54C0CC', '#1F4F59', '#7EA00E', '#DCD964', '#213502'];
+        // c8 dataset original colors per dataset index
+        const c8OrigColors = ['#8b7355', '#c68642', '#d4a574', '#fb8c00', '#e53935'];
+
+        function filterByCoF(filterType, value) {
+            // Update banner
+            const banner = document.getElementById('cof-filter-banner');
+            const label = document.getElementById('cof-filter-label');
+            if (banner) {
+                banner.style.display = 'flex';
+                label.textContent = filterType === 'cof_value'
+                    ? `Filtered: CoF = ${value}`
+                    : `Filtered: CoF Category = ${value}`;
+            }
+
+            // --- Highlight c7 (CoF Miles) ---
+            if (chartInstances['c7']) {
+                const labels = chartInstances['c7'].data.labels;
+                chartInstances['c7'].data.datasets[0].backgroundColor = labels.map((l, i) =>
+                    filterType === 'cof_value'
+                        ? (l == value ? c7OrigColors[i] : c7OrigColors[i] + '44')
+                        : c7OrigColors[i] // category filter doesn't dim c7
+                );
+                chartInstances['c7'].update();
+            }
+
+            // --- Highlight c8 (CoF by Category) ---
+            if (chartInstances['c8']) {
+                const labels = chartInstances['c8'].data.labels;
+                chartInstances['c8'].data.datasets.forEach((ds, di) => {
+                    ds.backgroundColor = labels.map((l, li) =>
+                        filterType === 'category'
+                            ? (l === value ? c8OrigColors[di] : c8OrigColors[di] + '44')
+                            : c8OrigColors[di] // cof_value filter doesn't dim c8
+                    );
+                });
+                chartInstances['c8'].update();
+            }
+
+            // --- Filter the map (map-cof only) ---
+            const mapId = 'map-cof';
+            const map = mapInstances[mapId];
+            if (map && typeof stormwaterData !== 'undefined') {
+                if (layerInstances[mapId]) map.removeLayer(layerInstances[mapId]);
+
+                const filtered = stormwaterData.features.filter(f => {
+                    if (filterType === 'cof_value') return f.properties.CoF == value;
+                    if (filterType === 'category') {
+                        // Map category label to a GeoJSON property key
+                        const catPropMap = {
+                            'Customer': 'CoF_Customer',
+                            'Diameter': 'CoF_Diameter',
+                            'Rail':     'CoF_Rail',
+                            'Road':     'CoF_Road',
+                            'Water':    'CoF_Water'
+                        };
+                        const prop = catPropMap[value];
+                        // Show pipes where this category contributes (value > 1 means elevated)
+                        return prop && f.properties[prop] != null && f.properties[prop] > 1;
+                    }
+                    return true;
+                });
+
+                // Color-code by CoF value when filtering by cof_value; by presence when by category
+                layerInstances[mapId] = L.geoJSON(
+                    { type: 'FeatureCollection', features: filtered },
+                    {
+                        style: f => {
+                            const cof = f.properties.CoF;
+                            const colors = { 1: '#54C0CC', 2: '#1F4F59', 3: '#7EA00E', 4: '#DCD964', 5: '#213502' };
+                            return { color: colors[cof] || '#c68642', weight: 4, opacity: 1 };
+                        },
+                        onEachFeature: (f, l) => {
+                            let popup = '<div style="font-size:11px"><b>FILTERED ASSET</b><br>';
+                            popup += `ID: ${f.properties.Asset_ID}<br>CoF: ${f.properties.CoF} | LoF: ${f.properties.LoF}</div>`;
+                            l.bindPopup(popup);
+                        }
+                    }
+                ).addTo(map);
+                layerInstances[mapId] = layerInstances[mapId];
+            }
+
+            // --- Filter Asset Details table (t2) ---
+            const t2 = document.getElementById('t2');
+            if (t2 && typeof CofAssetData !== 'undefined') {
+                const renderRow = r =>
+                    `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td><span class="risk-badge risk-${r[6]}">${r[6]}</span></td><td>${r[7]}</td><td>${r[8]}</td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td><td>${r[12]}</td></tr>`;
+
+                t2.innerHTML = CofAssetData.filter(r => {
+                    if (filterType === 'cof_value') return r[6] == value; // col 6 = CoF
+                    if (filterType === 'category') {
+                        const col = categoryColMap[value];
+                        // Show rows where the chosen category column has an elevated factor (> 1)
+                        return col !== null && col !== undefined && r[col] != null && parseFloat(r[col]) > 1;
+                    }
+                    return true;
+                }).map(renderRow).join('');
+            }
+        }
+
+        function resetCofFilters() {
+            // Hide banner
+            const banner = document.getElementById('cof-filter-banner');
+            if (banner) banner.style.display = 'none';
+
+            // Reset c7 colors
+            if (chartInstances['c7']) {
+                chartInstances['c7'].data.datasets[0].backgroundColor = [...c7OrigColors];
+                chartInstances['c7'].update();
+            }
+
+            // Reset c8 colors
+            if (chartInstances['c8']) {
+                chartInstances['c8'].data.datasets.forEach((ds, di) => {
+                    ds.backgroundColor = c8OrigColors[di];
+                });
+                chartInstances['c8'].update();
+            }
+
+            // Reset map-cof
+            const mapId = 'map-cof';
+            const map = mapInstances[mapId];
+            if (map && typeof stormwaterData !== 'undefined') {
+                if (layerInstances[mapId]) map.removeLayer(layerInstances[mapId]);
+                layerInstances[mapId] = L.geoJSON(stormwaterData, {
+                    style: { color: '#3b82f6', weight: 2, opacity: 0.6 },
+                    onEachFeature: (f, l) => {
+                        let popup = '<div style="font-size:11px">';
+                        for (let key in f.properties) { popup += `<b>${key}:</b> ${f.properties[key]}<br>`; }
+                        l.bindPopup(popup + '</div>');
+                    }
+                }).addTo(map);
+            }
+
+            // Reset table t2
+            loadAllCofData();
+        }
+
+        // Function to reset all filters
+        function resetFilters() {
+            activeLofFilter = null;
+
+            // Reset banner
+            const banner = document.getElementById('lof-filter-banner');
+            if (banner) banner.style.display = 'none';
+
+            // Reset c5 bar colors
+            if (chartInstances['c5']) {
+                chartInstances['c5'].data.datasets[0].backgroundColor = ['#1D1A39', '#AE445A', '#F39F5A', '#662549', '#451952'];
+                chartInstances['c5'].data.datasets[0].borderWidth = 0;
+                chartInstances['c5'].update();
+            }
+
+            // Reset c6b bar colors
+            if (chartInstances['c6b']) {
+                chartInstances['c6b'].data.datasets[0].backgroundColor = '#08979D';
+                chartInstances['c6b'].data.datasets[1].backgroundColor = '#055B5C';
+                chartInstances['c6b'].update();
+            }
+
+            initializeMaps();
+            loadAllLofData();
+            loadAllProjectsData();
+        }
+
+        // 3. MAP INITIALIZATION LOGIC
+        function initializeMaps() {
+            if (typeof stormwaterData === 'undefined') return;
+
+            const configs = [{id:'map-lof'}, {id:'map-cof'}, {id:'map-risk'}, {id:'map-projects'}];
+
+            configs.forEach(config => {
+                const el = document.getElementById(config.id);
+                if (el) {
+                    if (mapInstances[config.id]) mapInstances[config.id].remove(); // Clean init
+            
+                    const map = L.map(config.id).setView([32.0809, -81.0912], 13);
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+                    layerInstances[config.id] = L.geoJSON(stormwaterData, {
+                        style: { color: '#3b82f6', weight: 2, opacity: 0.6 },
+                        onEachFeature: (f, l) => {
+                            let popup = '<div style="font-size:11px">';
+                            for (let key in f.properties) { popup += `<b>${key}:</b> ${f.properties[key]}<br>`; }
+                            l.bindPopup(popup + '</div>');
+                        }
+                    }).addTo(map);
+
+                    mapInstances[config.id] = map;
+                }
+            });
+        }
+
+          
+
+        // 4. LOAD GEOJSON DATA
+        function loadGeoJsonData() {
+            fetch('merged_stormwater_map.geojson')
+                .then(response => {
+                    if (!response.ok) throw new Error("File not found");
+                    return response.json();
+                })
+                .then(data => {
+                    geoJsonData = data;
+                    console.log("Data loaded. Features:", data.features.length);
+                    // Initialize maps now that we have data
+                    initializeMaps();
+                })
+                .catch(err => {
+                    console.error("Error loading GeoJSON:", err);
+                    // Initialize empty maps even if data fails
+                    initializeMaps();
+                });
+        }
+
+        // Helper to style and add the layer
+        function addGeoJsonToMap(map, data) {
+            L.geoJSON(data, {
+                style: function(feature) {
+                    // Color logic based on source_file property
+                    let color = '#3b82f6'; // Default Blue
+                    if (feature.properties && feature.properties.source_file) {
+                        const src = feature.properties.source_file.toLowerCase();
+                        if (src.includes('pump')) color = '#ef4444'; // Red
+                        if (src.includes('conduit')) color = '#22c55e'; // Green
+                    }
+                    return { color: color, weight: 2, opacity: 0.8 };
+                },
+                onEachFeature: function(feature, layer) {
+                    // Simple popup
+                    if (feature.properties) {
+                        let popup = '<div style="font-size:11px">';
+                        for (let key in feature.properties) {
+                            popup += `<b>${key}:</b> ${feature.properties[key]}<br>`;
+                        }
+                        popup += '</div>';
+                        layer.bindPopup(popup);
+                    }
+                }
+            }).addTo(map);
+        }
 
 
         function initCharts() {
@@ -1250,7 +1471,7 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 }
             });
 
-            new Chart(document.getElementById('c5'), {
+            chartInstances['c5'] = new Chart(document.getElementById('c5'), {
                 type: 'bar',
                 data: {
                     labels: ['1', '2', '3', '4', '5'],
@@ -1260,7 +1481,25 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                         borderRadius: 3
                     }]
                 },
-                options: { ...opts, plugins: { legend: { display: false } } }
+                options: { 
+                    ...opts, 
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                footer: () => 'Click to filter map & table'
+                            }
+                        }
+                    },
+                    onHover: (event, elements) => {
+                        event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (!elements.length) return;
+                        const lofValue = chartInstances['c5'].data.labels[elements[0].index];
+                        filterByLoF(lofValue);
+                    }
+                }
             });
 
             new Chart(document.getElementById('c6'), {
@@ -1284,7 +1523,7 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 }
             });
 
-            new Chart(document.getElementById('c6b'), {
+            chartInstances['c6b'] = new Chart(document.getElementById('c6b'), {
                 type: 'bar',
                 data: {
                     labels: ['1', '2', '3', '5'],
@@ -1305,6 +1544,30 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 },
                 options: {
                     ...opts,
+                    plugins: {
+                        legend: { 
+                            labels: { 
+                                color: '#2b2520',
+                                font: { size: 11, weight: '500' },
+                                padding: 12,
+                                boxWidth: 12,
+                                boxHeight: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                footer: () => 'Click to filter map & table'
+                            }
+                        }
+                    },
+                    onHover: (event, elements) => {
+                        event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (!elements.length) return;
+                        const lofValue = chartInstances['c6b'].data.labels[elements[0].index];
+                        filterByLoF(lofValue);
+                    },
                     scales: {
                         x: { 
                             title: { display: true, text: 'LoF Physical', color: '#2b2520' },
@@ -1320,7 +1583,7 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 }
             });
 
-            new Chart(document.getElementById('c7'), {
+            chartInstances['c7'] = new Chart(document.getElementById('c7'), {
                 type: 'bar',
                 data: {
                     labels: ['1', '2', '3', '4', '5'],
@@ -1330,10 +1593,24 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                         borderRadius: 2
                     }]
                 },
-                options: { ...opts, plugins: { legend: { display: false } } }
+                options: { 
+                    ...opts, 
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { callbacks: { footer: () => 'Click to filter map & table' } }
+                    },
+                    onHover: (event, elements) => {
+                        event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (!elements.length) return;
+                        const cofValue = chartInstances['c7'].data.labels[elements[0].index];
+                        filterByCoF('cof_value', cofValue);
+                    }
+                }
             });
 
-            new Chart(document.getElementById('c8'), {
+            chartInstances['c8'] = new Chart(document.getElementById('c8'), {
                 type: 'bar',
                 data: {
                     labels: ['Customer', 'Diameter', 'Rail', 'Road', 'Water'],
@@ -1347,6 +1624,24 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 },
                 options: { 
                     ...opts,
+                    plugins: {
+                        legend: { 
+                            labels: { 
+                                color: '#2b2520',
+                                font: { size: 11, weight: '500' },
+                                padding: 12, boxWidth: 12, boxHeight: 12
+                            }
+                        },
+                        tooltip: { callbacks: { footer: () => 'Click to filter map & table' } }
+                    },
+                    onHover: (event, elements) => {
+                        event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (!elements.length) return;
+                        const categoryLabel = chartInstances['c8'].data.labels[elements[0].index];
+                        filterByCoF('category', categoryLabel);
+                    },
                     scales: { 
                         x: { stacked: true, ticks: { color: '#6b6158' }, grid: { color: '#f0ebe3' } },
                         y: { stacked: true, ticks: { color: '#6b6158' }, grid: { color: '#f0ebe3' } }
