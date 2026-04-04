@@ -487,6 +487,11 @@
         </div>
 
         <div id="lof" class="section">
+            <div id="lof-filter-banner" style="display:none; align-items: center; gap: 1rem; padding: 0.8rem 1.2rem; background: #e3f2fd; border-left: 4px solid #1976d2; margin-bottom: 1.2rem; border-radius: 4px;">
+                <span id="lof-filter-label" style="flex: 1; font-weight: 500; color: #1565c0;"></span>
+                <button onclick="resetFilters()" style="padding: 0.4rem 0.8rem; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Clear Filter</button>
+            </div>
+
             <div class="kpi-row">
                 <div class="kpi">
                     <div class="kpi-label">Segments</div>
@@ -559,6 +564,11 @@
         </div>
 
         <div id="cof" class="section">
+            <div id="cof-filter-banner" style="display:none; align-items: center; gap: 1rem; padding: 0.8rem 1.2rem; background: #fff3e0; border-left: 4px solid #f57c00; margin-bottom: 1.2rem; border-radius: 4px;">
+                <span id="cof-filter-label" style="flex: 1; font-weight: 500; color: #e65100;"></span>
+                <button onclick="resetCofFilters()" style="padding: 0.4rem 0.8rem; background: #f57c00; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Clear Filter</button>
+            </div>
+
             <div class="kpi-row">
                 <div class="kpi">
                     <div class="kpi-label">Segments</div>
@@ -607,6 +617,11 @@
         </div>
 
         <div id="risk" class="section">
+            <div id="risk-filter-banner" style="display:none; align-items: center; gap: 1rem; padding: 0.8rem 1.2rem; background: #f3e5f5; border-left: 4px solid #7b1fa2; margin-bottom: 1.2rem; border-radius: 4px;">
+                <span id="risk-filter-label" style="flex: 1; font-weight: 500; color: #6a1b9a;"></span>
+                <button onclick="resetRiskFilters()" style="padding: 0.4rem 0.8rem; background: #7b1fa2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Clear Filter</button>
+            </div>
+
             <div class="kpi-row">
                 <div class="kpi">
                     <div class="kpi-label">Segments</div>
@@ -639,43 +654,43 @@
                             <div class="matrix-cell matrix-hdr">Total</div>
                             
                             <div class="matrix-cell matrix-hdr">5</div>
-                            <div class="matrix-cell risk-low">27.97</div>
-                            <div class="matrix-cell risk-med">2.37</div>
-                            <div class="matrix-cell risk-high">0.95</div>
-                            <div class="matrix-cell risk-vhigh">0.64</div>
-                            <div class="matrix-cell risk-extreme">1.07</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(5, 1)" style="cursor: pointer; transition: opacity 0.2s;">27.97</div>
+                            <div class="matrix-cell risk-med" onclick="filterByMatrixCell(5, 2)" style="cursor: pointer; transition: opacity 0.2s;">2.37</div>
+                            <div class="matrix-cell risk-high" onclick="filterByMatrixCell(5, 3)" style="cursor: pointer; transition: opacity 0.2s;">0.95</div>
+                            <div class="matrix-cell risk-vhigh" onclick="filterByMatrixCell(5, 4)" style="cursor: pointer; transition: opacity 0.2s;">0.64</div>
+                            <div class="matrix-cell risk-extreme" onclick="filterByMatrixCell(5, 5)" style="cursor: pointer; transition: opacity 0.2s;">1.07</div>
                             <div class="matrix-cell matrix-val">33.00</div>
                             
                             <div class="matrix-cell matrix-hdr">4</div>
-                            <div class="matrix-cell risk-low">40.97</div>
-                            <div class="matrix-cell risk-med">3.55</div>
-                            <div class="matrix-cell risk-high">0.67</div>
-                            <div class="matrix-cell risk-vhigh">0.56</div>
-                            <div class="matrix-cell risk-vhigh">0.62</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(4, 1)" style="cursor: pointer; transition: opacity 0.2s;">40.97</div>
+                            <div class="matrix-cell risk-med" onclick="filterByMatrixCell(4, 2)" style="cursor: pointer; transition: opacity 0.2s;">3.55</div>
+                            <div class="matrix-cell risk-high" onclick="filterByMatrixCell(4, 3)" style="cursor: pointer; transition: opacity 0.2s;">0.67</div>
+                            <div class="matrix-cell risk-vhigh" onclick="filterByMatrixCell(4, 4)" style="cursor: pointer; transition: opacity 0.2s;">0.56</div>
+                            <div class="matrix-cell risk-vhigh" onclick="filterByMatrixCell(4, 5)" style="cursor: pointer; transition: opacity 0.2s;">0.62</div>
                             <div class="matrix-cell matrix-val">46.37</div>
                             
                             <div class="matrix-cell matrix-hdr">3</div>
-                            <div class="matrix-cell risk-low">32.92</div>
-                            <div class="matrix-cell risk-med">0.72</div>
-                            <div class="matrix-cell risk-med">4.42</div>
-                            <div class="matrix-cell risk-high">0.36</div>
-                            <div class="matrix-cell risk-high">0.47</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(3, 1)" style="cursor: pointer; transition: opacity 0.2s;">32.92</div>
+                            <div class="matrix-cell risk-med" onclick="filterByMatrixCell(3, 2)" style="cursor: pointer; transition: opacity 0.2s;">0.72</div>
+                            <div class="matrix-cell risk-med" onclick="filterByMatrixCell(3, 3)" style="cursor: pointer; transition: opacity 0.2s;">4.42</div>
+                            <div class="matrix-cell risk-high" onclick="filterByMatrixCell(3, 4)" style="cursor: pointer; transition: opacity 0.2s;">0.36</div>
+                            <div class="matrix-cell risk-high" onclick="filterByMatrixCell(3, 5)" style="cursor: pointer; transition: opacity 0.2s;">0.47</div>
                             <div class="matrix-cell matrix-val">38.88</div>
                             
                             <div class="matrix-cell matrix-hdr">2</div>
-                            <div class="matrix-cell risk-low">191.57</div>
-                            <div class="matrix-cell risk-low">7.74</div>
-                            <div class="matrix-cell risk-med">0.13</div>
-                            <div class="matrix-cell risk-med">9.29</div>
-                            <div class="matrix-cell risk-med">9.44</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(2, 1)" style="cursor: pointer; transition: opacity 0.2s;">191.57</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(2, 2)" style="cursor: pointer; transition: opacity 0.2s;">7.74</div>
+                            <div class="matrix-cell risk-med" onclick="filterByMatrixCell(2, 3)" style="cursor: pointer; transition: opacity 0.2s;">0.13</div>
+                            <div class="matrix-cell risk-med" onclick="filterByMatrixCell(2, 4)" style="cursor: pointer; transition: opacity 0.2s;">9.29</div>
+                            <div class="matrix-cell risk-med" onclick="filterByMatrixCell(2, 5)" style="cursor: pointer; transition: opacity 0.2s;">9.44</div>
                             <div class="matrix-cell matrix-val">218.18</div>
                             
                             <div class="matrix-cell matrix-hdr">1</div>
-                            <div class="matrix-cell risk-low">51.77</div>
-                            <div class="matrix-cell risk-low">5.23</div>
-                            <div class="matrix-cell risk-low">0.00</div>
-                            <div class="matrix-cell risk-low">0.05</div>
-                            <div class="matrix-cell risk-low">3.27</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(1, 1)" style="cursor: pointer; transition: opacity 0.2s;">51.77</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(1, 2)" style="cursor: pointer; transition: opacity 0.2s;">5.23</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(1, 3)" style="cursor: pointer; transition: opacity 0.2s;">0.00</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(1, 4)" style="cursor: pointer; transition: opacity 0.2s;">0.05</div>
+                            <div class="matrix-cell risk-low" onclick="filterByMatrixCell(1, 5)" style="cursor: pointer; transition: opacity 0.2s;">3.27</div>
                             <div class="matrix-cell matrix-val">60.33</div>
 
                             <div class="matrix-cell matrix-hdr">Total</div>
@@ -714,12 +729,17 @@
         </div>
 
         <div id="projects" class="section">
+            <div id="projects-filter-banner" style="display:none; align-items: center; gap: 1rem; padding: 0.8rem 1.2rem; background: #e8f5e9; border-left: 4px solid #388e3c; margin-bottom: 1.2rem; border-radius: 4px;">
+                <span id="projects-filter-label" style="flex: 1; font-weight: 500; color: #2e7d32;"></span>
+                <button onclick="resetProjectsFilters()" style="padding: 0.4rem 0.8rem; background: #388e3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Clear Filter</button>
+            </div>
+
             <div class="grid-2">
                 <div>
                     <div class="card">
                         <div class="card-title">Projects</div>
                         <div class="project-list">
-                            <div class="project-item" onclick="proj('blank')">(Blank)</div>
+                            <div class="project-item" onclick="proj('blank')">All Projects</div>
                             <div class="project-item" onclick="proj('p1')">Project 1</div>
                             <div class="project-item active" onclick="proj('p2')">Project 2</div>
                             <div class="project-item" onclick="proj('p3')">Project 3</div>
@@ -853,6 +873,16 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
             const cofBanner = document.getElementById('cof-filter-banner');
             if (cofBanner && cofBanner.style.display !== 'none' && id !== 'cof') {
                 resetCofFilters();
+            }
+            // Always silently reset Risk filters when navigating away from the Risk tab
+            const riskBanner = document.getElementById('risk-filter-banner');
+            if (riskBanner && riskBanner.style.display !== 'none' && id !== 'risk') {
+                resetRiskFilters();
+            }
+            // Always silently reset Projects filters when navigating away from the Projects tab
+            const projectsBanner = document.getElementById('projects-filter-banner');
+            if (projectsBanner && projectsBanner.style.display !== 'none' && id !== 'projects') {
+                resetProjectsFilters();
             }
 
             // 3. Reload full data for the section being entered, so tables always show all rows
@@ -1142,6 +1172,284 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
 
             // Reset table t2
             loadAllCofData();
+        }
+
+        // --- RISK FILTER ENGINE ---
+        let activeRiskFilter = null;
+        let activeMatrixLof = null;
+        let activeMatrixCof = null;
+
+        function filterByRisk(riskRange) {
+            activeRiskFilter = riskRange;
+
+            // Update filter banner
+            const banner = document.getElementById('risk-filter-banner');
+            if (banner) {
+                banner.style.display = 'flex';
+                banner.querySelector('#risk-filter-label').textContent = `Filtered: Risk Range = ${riskRange}`;
+            }
+
+            // Highlight selected bar in c9
+            if (chartInstances['c9']) {
+                const labels = chartInstances['c9'].data.labels;
+                chartInstances['c9'].data.datasets[0].backgroundColor = labels.map((l, i) =>
+                    l == riskRange ? '#1A3D63' : '#1A3D6388'
+                );
+                chartInstances['c9'].data.datasets[0].borderWidth = labels.map(l => l == riskRange ? 2 : 0);
+                chartInstances['c9'].data.datasets[0].borderColor = labels.map(l => l == riskRange ? '#fff' : 'transparent');
+                chartInstances['c9'].update();
+            }
+
+            // Filter the map and table based on Risk Range
+            const mapId = 'map-risk';
+            const map = mapInstances[mapId];
+            if (map && typeof stormwaterData !== 'undefined') {
+                if (layerInstances[mapId]) map.removeLayer(layerInstances[mapId]);
+
+                const range = riskRange.split('-').map(v => parseInt(v));
+                const minRisk = range[0];
+                const maxRisk = range[1];
+
+                const filteredFeatures = stormwaterData.features.filter(f => {
+                    const risk = f.properties.Risk_Score || 0;
+                    return risk >= minRisk && risk <= maxRisk;
+                });
+
+                layerInstances[mapId] = L.geoJSON({type: "FeatureCollection", features: filteredFeatures}, {
+                    style: { color: '#7b1fa2', weight: 2, opacity: 0.8 },
+                    onEachFeature: (f, l) => {
+                        let popup = '<div style="font-size:11px"><b>FILTERED ASSET</b><br>';
+                        popup += `ID: ${f.properties.Asset_ID}<br>Risk: ${f.properties.Risk_Score}</div>`;
+                        l.bindPopup(popup);
+                    }
+                }).addTo(map);
+            }
+
+            // Filter table t3 (High Risk Assets)
+            const t3 = document.getElementById('t3');
+            if (typeof RiskAssetData !== 'undefined') {
+                const range = riskRange.split('-').map(v => parseInt(v));
+                const minRisk = range[0];
+                const maxRisk = range[1];
+
+                t3.innerHTML = RiskAssetData.filter(r => {
+                    const risk = r[7]; // Risk Score column
+                    return risk >= minRisk && risk <= maxRisk;
+                }).map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td><span class="risk-badge risk-${r[8]}">${r[8]}</span></td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td></tr>`).join('');
+            }
+
+            activeMatrixLof = null;
+            activeMatrixCof = null;
+        }
+
+        function filterByMatrixCell(lof, cof) {
+            activeMatrixLof = lof;
+            activeMatrixCof = cof;
+            activeRiskFilter = null;
+
+            // Update filter banner
+            const banner = document.getElementById('risk-filter-banner');
+            if (banner) {
+                banner.style.display = 'flex';
+                banner.querySelector('#risk-filter-label').textContent = `Filtered: LoF = ${lof}, CoF = ${cof}`;
+            }
+
+            // Dim the c9 chart when matrix filter is active
+            if (chartInstances['c9']) {
+                chartInstances['c9'].data.datasets[0].backgroundColor = '#1A3D6388';
+                chartInstances['c9'].update();
+            }
+
+            // Highlight selected matrix cell
+            const cells = document.querySelectorAll('.matrix-cell');
+            cells.forEach(cell => cell.style.opacity = '0.5');
+            // Find and highlight the clicked cell (this is simplified, in practice you might want to pass the element)
+
+            // Filter the map 
+            const mapId = 'map-risk';
+            const map = mapInstances[mapId];
+            if (map && typeof stormwaterData !== 'undefined') {
+                if (layerInstances[mapId]) map.removeLayer(layerInstances[mapId]);
+
+                const filteredFeatures = stormwaterData.features.filter(f => {
+                    return f.properties.LoF == lof && f.properties.CoF == cof;
+                });
+
+                layerInstances[mapId] = L.geoJSON({type: "FeatureCollection", features: filteredFeatures}, {
+                    style: { color: '#7b1fa2', weight: 2, opacity: 0.8 },
+                    onEachFeature: (f, l) => {
+                        let popup = '<div style="font-size:11px"><b>FILTERED ASSET</b><br>';
+                        popup += `ID: ${f.properties.Asset_ID}<br>LoF: ${f.properties.LoF} | CoF: ${f.properties.CoF}</div>`;
+                        l.bindPopup(popup);
+                    }
+                }).addTo(map);
+            }
+
+            // Filter table t3 (High Risk Assets)
+            const t3 = document.getElementById('t3');
+            if (typeof RiskAssetData !== 'undefined') {
+                t3.innerHTML = RiskAssetData.filter(r => {
+                    return r[6] == lof && r[5] == cof; // Assuming LoF is col 6 and CoF is col 5
+                }).map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td><span class="risk-badge risk-${r[8]}">${r[8]}</span></td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td></tr>`).join('');
+            }
+        }
+
+        function resetRiskFilters() {
+            activeRiskFilter = null;
+            activeMatrixLof = null;
+            activeMatrixCof = null;
+
+            // Hide banner
+            const banner = document.getElementById('risk-filter-banner');
+            if (banner) banner.style.display = 'none';
+
+            // Reset c9 colors
+            if (chartInstances['c9']) {
+                chartInstances['c9'].data.datasets[0].backgroundColor = '#1A3D63';
+                chartInstances['c9'].data.datasets[0].borderWidth = 0;
+                chartInstances['c9'].update();
+            }
+
+            // Reset matrix cell opacity
+            const cells = document.querySelectorAll('.matrix-cell');
+            cells.forEach(cell => cell.style.opacity = '1');
+
+            // Reset map-risk
+            const mapId = 'map-risk';
+            const map = mapInstances[mapId];
+            if (map && typeof stormwaterData !== 'undefined') {
+                if (layerInstances[mapId]) map.removeLayer(layerInstances[mapId]);
+                layerInstances[mapId] = L.geoJSON(stormwaterData, {
+                    style: { color: '#3b82f6', weight: 2, opacity: 0.6 },
+                    onEachFeature: (f, l) => {
+                        let popup = '<div style="font-size:11px">';
+                        for (let key in f.properties) { popup += `<b>${key}:</b> ${f.properties[key]}<br>`; }
+                        l.bindPopup(popup + '</div>');
+                    }
+                }).addTo(map);
+            }
+
+            // Reset table t3
+            loadAllRiskData();
+        }
+
+        // --- PROJECTS FILTER ENGINE ---
+        let activeProjectFilter = null;
+
+        function proj(id) {
+            document.querySelectorAll('.project-item').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Store active project for filtering
+            activeProjectFilter = id !== 'blank' ? id : null;
+
+            const projects = {
+                blank: { projnum: 'Overall', name: 'Sum of Projects', desc: '(Blank)', serty: 'Replace', end: '(Blank)', cost: '$82,485,867', assets: '1,555', len: '136115', avgAge: '33.92', maxAge: '52.65', avgDia: '19.78', maxDia: '39.77', avgBR: '1.84', prev: '(Blank)', avgRisk: '9.86', maxRisk: '15' },
+                p1: { projnum: 'Project 1', name: 'Project 1', desc: '(Blank)', servty: 'Replace', end: '(Blank)', cost: '$2,830,226', assets: '55', len: '5627', avgAge: '35.20', maxAge: '60', avgDia: '17.00', maxDia: '18', avgBR: '1.80', prev: '(Blank)', avgRisk: '25.00', maxRisk: '25' },
+                p2: { projnum: 'Project 2', name: 'Project 2', desc: '(Blank)', servty: 'Replace', end: '(Blank)', cost: '$6,489,553', assets: '98', len: '9650', avgAge: '35.20', maxAge: '60', avgDia: '23.00', maxDia: '48', avgBR: '1.90', prev: '(Blank)', avgRisk: '18.80', maxRisk: '20' },
+                p3: { projnum: 'Project 3', name: 'Project 3', desc: '(Blank)', servty: 'Replace', end: '(Blank)', cost: '$34,161,123', assets: '945', len: '69587', avgAge: '34.20', maxAge: '60', avgDia: '16.60', maxDia: '42', avgBR: '1.90', prev: '(Blank)', avgRisk: '8.90', maxRisk: '15' },
+                p4: { projnum: 'Project 4', name: 'Project 4', desc: '(Blank)', servty: 'Replace', end: '(Blank)', cost: '$39,004,965', assets: '457', len: '51251', avgAge: '32.90', maxAge: '35', avgDia: '26.00', maxDia: '36', avgBR: '1.70', prev: '(Blank)', avgRisk: '8.10', maxRisk: '12' }
+            };
+
+            const p = projects[id];
+            document.getElementById('details').innerHTML = `
+                <div class="detail-row"><span class="detail-label">Project Num</span><span class="detail-value">${p.projnum}</span></div>
+                <div class="detail-row"><span class="detail-label">Name</span><span class="detail-value">${p.name}</span></div>
+                <div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">${p.desc}</span></div>
+                <div class="detail-row"><span class="detail-label">Service Type</span><span class="detail-value">${p.servty}</span></div>
+                <div class="detail-row"><span class="detail-label">End Year</span><span class="detail-value">${p.end}</span></div>
+                <div class="detail-row"><span class="detail-label">Total Cost</span><span class="detail-value">${p.cost}</span></div>
+                <div class="detail-row"><span class="detail-label">Assets</span><span class="detail-value">${p.assets}</span></div>
+                <div class="detail-row"><span class="detail-label">Length</span><span class="detail-value">${p.len}</span></div>
+                <div class="detail-row"><span class="detail-label">Avg Age</span><span class="detail-value">${p.avgAge}</span></div>
+                <div class="detail-row"><span class="detail-label">Max Age</span><span class="detail-value">${p.maxAge}</span></div>
+                <div class="detail-row"><span class="detail-label">Avg Diameter</span><span class="detail-value">${p.avgDia}</span></div>
+                <div class="detail-row"><span class="detail-label">Max Diameter</span><span class="detail-value">${p.maxDia}</span></div>
+                <div class="detail-row"><span class="detail-label">Avg BR</span><span class="detail-value">${p.avgBR}</span></div>
+                <div class="detail-row"><span class="detail-label">Prev Failures</span><span class="detail-value">${p.prev}</span></div>
+                <div class="detail-row"><span class="detail-label">Avg Risk</span><span class="detail-value">${p.avgRisk}</span></div>
+                <div class="detail-row"><span class="detail-label">Max Risk</span><span class="detail-value">${p.maxRisk}</span></div>
+            `;
+
+            // Filter the map and table based on selected project
+            if (id === 'blank') {
+                resetProjectsFilters();
+            } else {
+                filterByProject(id);
+            }
+        }
+
+        function filterByProject(projectId) {
+            // Update banner
+            const banner = document.getElementById('projects-filter-banner');
+            if (banner) {
+                const projectNames = { p1: 'Project 1', p2: 'Project 2', p3: 'Project 3', p4: 'Project 4' };
+                banner.style.display = 'flex';
+                banner.querySelector('#projects-filter-label').textContent = `Filtered: ${projectNames[projectId]}`;
+            }
+
+            // Filter map-projects
+            const mapId = 'map-projects';
+            const map = mapInstances[mapId];
+            if (map && typeof stormwaterData !== 'undefined') {
+                if (layerInstances[mapId]) map.removeLayer(layerInstances[mapId]);
+
+                // Map project IDs to asset properties (this depends on your data structure)
+                const projectIdMap = { 
+                    p1: 1, p2: 2, p3: 3, p4: 4
+                };
+                const projId = projectIdMap[projectId];
+
+                const filteredFeatures = stormwaterData.features.filter(f => {
+                    return f.properties.Project_ID == projId;
+                });
+
+                layerInstances[mapId] = L.geoJSON({type: "FeatureCollection", features: filteredFeatures}, {
+                    style: { color: '#388e3c', weight: 2, opacity: 0.8 },
+                    onEachFeature: (f, l) => {
+                        let popup = '<div style="font-size:11px"><b>PROJECT ASSET</b><br>';
+                        popup += `ID: ${f.properties.Asset_ID}<br>Project: ${f.properties.Project_ID}</div>`;
+                        l.bindPopup(popup);
+                    }
+                }).addTo(map);
+            }
+
+            // Filter table t4 (Project Assets)
+            const t4 = document.getElementById('t4');
+            if (typeof ProjectsAssetDetails !== 'undefined') {
+                const projectIdMap = { p1: 1, p2: 2, p3: 3, p4: 4 };
+                const projId = projectIdMap[projectId];
+
+                t4.innerHTML = ProjectsAssetDetails.filter(r => {
+                    return r[12] == projId; // Assuming Project ID is in column 12
+                }).map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td><span class="risk-badge risk-${r[8]}">${r[8]}</span></td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td></tr>`).join('');
+            }
+        }
+
+        function resetProjectsFilters() {
+            activeProjectFilter = null;
+
+            // Hide banner
+            const banner = document.getElementById('projects-filter-banner');
+            if (banner) banner.style.display = 'none';
+
+            // Reset map-projects
+            const mapId = 'map-projects';
+            const map = mapInstances[mapId];
+            if (map && typeof stormwaterData !== 'undefined') {
+                if (layerInstances[mapId]) map.removeLayer(layerInstances[mapId]);
+                layerInstances[mapId] = L.geoJSON(stormwaterData, {
+                    style: { color: '#3b82f6', weight: 2, opacity: 0.6 },
+                    onEachFeature: (f, l) => {
+                        let popup = '<div style="font-size:11px">';
+                        for (let key in f.properties) { popup += `<b>${key}:</b> ${f.properties[key]}<br>`; }
+                        l.bindPopup(popup + '</div>');
+                    }
+                }).addTo(map);
+            }
+
+            // Reset table t4
+            loadAllProjectsData();
         }
 
         // Function to reset all filters
@@ -1675,18 +1983,31 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
                 }
             });
 
-            new Chart(document.getElementById('c9'), {
+            chartInstances['c9'] = new Chart(document.getElementById('c9'), {
                 type: 'bar',
                 data: {
                     labels: ['1-5', '6-10', '11-15', '16-20', '21-25'],
                     datasets: [{ 
                         data: [361.5021, 29.91547, 2.453211, 1.827834, 1.06587],
-                        //backgroundColor: '#c68642',
                         backgroundColor: '#1A3D63',
                         borderRadius: 4
                     }]
                 },
-                options: { ...opts, plugins: { legend: { display: false } } }
+                options: { 
+                    ...opts,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { callbacks: { footer: () => 'Click to filter map & table' } }
+                    },
+                    onHover: (event, elements) => {
+                        event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+                    },
+                    onClick: (event, elements) => {
+                        if (!elements.length) return;
+                        const riskRange = chartInstances['c9'].data.labels[elements[0].index];
+                        filterByRisk(riskRange);
+                    }
+                }
             });
 
             // Scenario data for "10 M Max" - Chart c10
@@ -2217,39 +2538,6 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
             document.getElementById(tableId).innerHTML = data.map(r => 
                 `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td><td>${r[8]}</td><td>${r[9]}</td><td>${r[10]}</td></tr>`
             ).join('');
-        }
-
-        function proj(id) {
-            document.querySelectorAll('.project-item').forEach(p => p.classList.remove('active'));
-            event.target.classList.add('active');
-
-            const projects = {
-                blank: { projnum: '(Blank)', name: '(Blank)', desc: '(Blank)', serty: '(Blank)', end: '(Blank)', cost: '(Blank)', assets: '(Blank)', len: '(Blank)', avgAge: '(Blank)', maxAge: '(Blank)', avgDia: '(Blank)', maxDia: '(Blank)', avgBR: '(Blank)', prev: '(Blank)', avgRisk: '(Blank)', maxRisk: '(Blank)' },
-                p1: { projnum: 'Project 1', name: 'Project 1', desc: '(Blank)', servty: 'Replace', end: '(Blank)', cost: '$2,830,226', assets: '55', len: '5627', avgAge: '35.20', maxAge: '60', avgDia: '17.00', maxDia: '18', avgBR: '1.80', prev: '(Blank)', avgRisk: '25.00', maxRisk: '25' },
-                p2: { projnum: 'Project 2', name: 'Project 2', desc: '(Blank)', servty: 'Replace', end: '(Blank)', cost: '$6,489,553', assets: '98', len: '9650', avgAge: '35.20', maxAge: '60', avgDia: '23.00', maxDia: '48', avgBR: '1.90', prev: '(Blank)', avgRisk: '18.80', maxRisk: '20' },
-                p3: { projnum: 'Project 3', name: 'Project 3', desc: '(Blank)', servty: 'Replace', end: '(Blank)', cost: '$34,161,123', assets: '945', len: '69587', avgAge: '34.20', maxAge: '60', avgDia: '16.60', maxDia: '42', avgBR: '1.90', prev: '(Blank)', avgRisk: '8.90', maxRisk: '15' },
-                p4: { projnum: 'Project 4', name: 'Project 4', desc: '(Blank)', servty: 'Replace', end: '(Blank)', cost: '$39,004,965', assets: '457', len: '51251', avgAge: '32.90', maxAge: '35', avgDia: '26.00', maxDia: '36', avgBR: '1.70', prev: '(Blank)', avgRisk: '8.10', maxRisk: '12' }
-            };
-
-            const p = projects[id];
-            document.getElementById('details').innerHTML = `
-                <div class="detail-row"><span class="detail-label">Project Num</span><span class="detail-value">${p.projnum}</span></div>
-                <div class="detail-row"><span class="detail-label">Name</span><span class="detail-value">${p.name}</span></div>
-                <div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">${p.desc}</span></div>
-                <div class="detail-row"><span class="detail-label">Service Type</span><span class="detail-value">${p.servty}</span></div>
-                <div class="detail-row"><span class="detail-label">End Year</span><span class="detail-value">${p.end}</span></div>
-                <div class="detail-row"><span class="detail-label">Total Cost</span><span class="detail-value">${p.cost}</span></div>
-                <div class="detail-row"><span class="detail-label">Assets</span><span class="detail-value">${p.assets}</span></div>
-                <div class="detail-row"><span class="detail-label">Length</span><span class="detail-value">${p.len}</span></div>
-                <div class="detail-row"><span class="detail-label">Avg Age</span><span class="detail-value">${p.avgAge}</span></div>
-                <div class="detail-row"><span class="detail-label">Max Age</span><span class="detail-value">${p.maxAge}</span></div>
-                <div class="detail-row"><span class="detail-label">Avg Diameter</span><span class="detail-value">${p.avgDia}</span></div>
-                <div class="detail-row"><span class="detail-label">Max Diameter</span><span class="detail-value">${p.maxDia}</span></div>
-                <div class="detail-row"><span class="detail-label">Avg BR</span><span class="detail-value">${p.avgBR}</span></div>
-                <div class="detail-row"><span class="detail-label">Prev Failures</span><span class="detail-value">${p.prev}</span></div>
-                <div class="detail-row"><span class="detail-label">Avg Risk</span><span class="detail-value">${p.avgRisk}</span></div>
-                <div class="detail-row"><span class="detail-label">Max Risk</span><span class="detail-value">${p.maxRisk}</span></div>
-            `;
         }
 
         function loadAllLofData() {
