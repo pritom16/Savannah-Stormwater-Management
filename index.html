@@ -139,6 +139,8 @@
             padding: 1.1rem;
             margin-bottom: 1.2rem;
             box-shadow: 0 1px 2px rgba(43,37,32,0.04);
+            display: flex;
+            flex-direction: column;
         }
         
         .card-title {
@@ -183,7 +185,7 @@
         
         .chart-wrap {
             position: relative;
-            height: 290px;
+            height: 340px;
         }
         
         .chart-wrap-lg {
@@ -195,12 +197,23 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.2rem;
+            align-items: stretch;
+        }
+        
+        .grid-2 > div {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .grid-2 > .card {
+            display: flex;
+            flex-direction: column;
         }
         
         .grid-3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.2rem;
+            gap: 1.0rem;
         }
         
         @media (max-width: 1200px) {
@@ -325,7 +338,8 @@
             background: #faf8f5;
             border: 2px dashed #d4a574;
             border-radius: 2px;
-            height: 340px;
+            min-height: 340px;
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -340,12 +354,36 @@
             background: transparent;
             border: none;
             padding: 0;
-            display: block; /* <--- THIS IS THE FIX. Forces map to fill the space. */
+            display: flex;
+            flex-direction: column;
         }
         
         .map-box.active .leaflet-container {
-            height: 100%;
+            flex: 1;
             border-radius: 2px;
+        }
+        
+        .leaflet-popup-content {
+            max-height: 250px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .leaflet-popup-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .leaflet-popup-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .leaflet-popup-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        
+        .leaflet-popup-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
         
         select {
@@ -368,17 +406,17 @@
         .matrix {
         display: grid;
         grid-template-columns: repeat(7, 1fr); /* 7 columns: Y-axis label, 1-5, and Total */
-        gap: 2px;
+        gap: 1px;
         background: #e5e7eb;
         border: 1px solid #d1d5db;
         }
         
         .matrix-cell {
-        aspect-ratio: 1 / 0.8;
+        aspect-ratio: 0.7 / 0.6; /* 1 / 0.8 */
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         font-weight: 500;
         background: white;
         }
@@ -1377,6 +1415,22 @@ const ProjectsAssetDetails = [["1", "RCP", "15", "2022", "1.1", "1", "1", "1", "
             } else {
                 filterByProject(id);
             }
+            
+            // Trigger map resize after DOM updates and reflow
+            setTimeout(() => {
+                const map = mapInstances['map-projects'];
+                if (map) {
+                    map.invalidateSize();
+                }
+            }, 150);
+            
+            // Additional resize trigger for safety
+            setTimeout(() => {
+                const map = mapInstances['map-projects'];
+                if (map) {
+                    map.invalidateSize();
+                }
+            }, 450);
         }
 
         function filterByProject(projectId) {
